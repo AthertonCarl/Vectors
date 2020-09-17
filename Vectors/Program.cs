@@ -3,11 +3,9 @@
 namespace Vectors
 {
 
-
-
     class Program
     {
-        static Random R = new Random(123);
+        static Random R = new Random();
 
         struct Point
         {
@@ -21,7 +19,7 @@ namespace Vectors
             int n = plotPoints;
             Point[] points = new Point[n];
 
-            if (n > 0 && n < 1000)
+            if (n >= 2 && n < 1000)
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -62,19 +60,17 @@ namespace Vectors
                 return Math.Sqrt(width * width + height * height + depth * depth);
                 
             }
-            else
+            else 
             {
-                return Math.Sqrt(width * width + height * height);;
+                return Math.Sqrt(width * width + height * height);
             }
-
-
         }
 
-        static void ClosestPoint(Point[] points)
+        static double ClosestPoint(Point[] points)
         {
-            double distance = 0;
+            double  distance = 0;
             double closestDistance = 0;
-            double previousDistance = 0;
+            double previousDistance = 1000;
 
             // First Point
             int x1 = 0, y1 = 0, z1 = 0;
@@ -83,38 +79,85 @@ namespace Vectors
             int x2 = 0, y2 = 0, z2 = 0;
 
             // Closest Element
-            int firstPoint = 0, secondPoint
+            int firstPoint = 0, secondPoint = 0;
 
-
-
-            for (int c = 0; c < points.Length; c++)
+            for (int l = 0; l < points.Length; l++)
             {
-                for (int b = 0; b < points.Length; b++)
+                for (int k = 0; k < points.Length; k++)
                 {
-                    if (c != b)
+                    if (l != k)
                     {
-                        distance =GetDistance(points[c], points[b])
+                        distance = GetDistance(points[l], points[k]);
+                    }
+
+                    if (distance < previousDistance && distance != 0)
+                    {
+                        closestDistance = distance;
+                        previousDistance = distance;
+
+                        // Cosnsole.Write X & Y values
+
+                        // First Point 
+                        x1 = points[l].x;
+                        y1 = points[l].y;
+                        z1 = points[l].z;
+                        
+                        // Second Point
+                        x2 = points[k].x;
+                        y2 = points[k].y;
+                        z2 = points[k].z;
+
+                        // Closest Element in array
+                        firstPoint = l;
+                        secondPoint = k;
                     }
                 }
             }
+            Console.WriteLine($"The closest points are \nArray Element: " +
+                $"|{firstPoint}| X:{x1}, Y:{y1}, Z:{z1} \n\nAND \n\nArray Element: " +
+                $"|{secondPoint}| X:{x2}, Y:{y2}, Z:{z2}");
 
+            return closestDistance;
+        }
+
+        private static double GetDis2Point()
+        {
+            Point[] arrayOfPoints = GetPoints(2);
+
+            return GetDistance(arrayOfPoints[0], arrayOfPoints[1]);
+        }
+
+        private static void PrintPoints(Point[] providedPoints)
+        {
+            Point[] pointsToPrint = providedPoints;
+            Console.WriteLine($"You have successfully created a container with {pointsToPrint.Length} random two-dimensional points.");
+            Console.WriteLine("\n");
+            for (int i = 0; i < pointsToPrint.Length; i++)
+            {
+                
+                Console.WriteLine($"Array Element: |{i}| X: {pointsToPrint[i].x}, Y: {pointsToPrint[i].y}, Z: {pointsToPrint[i].z}");
+            }
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("-----------------------First Part-------------------------------------------");
-            Console.WriteLine($"Eculidean Distance between (2) Two-Dimentional Points: |{GetDis2Point()}|");
-            Console.WriteLine("\n\n");
+            Console.WriteLine("\n");
+            //GetPoints(100);
+            //Console.WriteLine($"How many elements would you like inside your new container? Please enter a valid positive number: ");
+            //Point[] newPointsContainer = GetPoints(Convert.ToInt32(Console.ReadLine()));
+            Point[] newPointsContainer = GetPoints();
+            PrintPoints(newPointsContainer);
+            Console.WriteLine("\n");
             Console.WriteLine("-----------------------Second Part------------------------------------------");
-            Console.WriteLine($"Closest Eculidean Distance Between (100) Two-Dimentional Points: |{FindClosest(GetPoints(100))}|");
-            Console.WriteLine("\n\n");
+            Console.WriteLine("\n");
+            Console.WriteLine($"Closest Euclidean Distance Between (100) Two-Dimentional Points: |{ClosestPoint(newPointsContainer)}|");
+            Console.WriteLine("\n");
             Console.WriteLine("-----------------------Third And Fourth Part--------------------------------");
-            Console.WriteLine($"With a Distance of: |{FindClosest(GetPoints(1000))}|");
+            Console.WriteLine("\n");
+            Console.WriteLine($"With a Distance of: |{ClosestPoint(GetPoints(1000))}|");
+            Console.WriteLine("\n");
             Console.WriteLine("----------------------------------------------------------------------------");
         }
-
-
-
-
     }
 }
